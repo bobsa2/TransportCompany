@@ -33,6 +33,11 @@ public class VehicleDAO implements Dao<Vehicle> {
 
     @Override
     public void delete(int id) {
+        entityManager.getTransaction().begin();
 
+        Vehicle retrievedVehicle = entityManager.find(Vehicle.class, id);
+
+        entityManager.remove(retrievedVehicle);
+        entityManager.getTransaction().commit();
     }
 }
