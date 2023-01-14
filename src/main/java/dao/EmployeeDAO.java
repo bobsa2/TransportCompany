@@ -26,12 +26,13 @@ public class EmployeeDAO implements Dao<Employee> {
         Employee retrievedEmployee = entityManager.find(entity.Employee.class, id);
         retrievedEmployee.setName(employee.getName());
         retrievedEmployee.setIncome(employee.getIncome());
+        //update transport company
 
         entityManager.getTransaction().commit();
     }
 
     @Override
-    public void delete(int id, Employee object) {
+    public void delete(int id) {
         entityManager.getTransaction().begin();
 
         Employee retrievedEmployee = entityManager.find(Employee.class, id);

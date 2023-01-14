@@ -30,12 +30,13 @@ public class ClientDAO implements Dao<Client> {
         retrievedClient.setMail(client.getMail());
         retrievedClient.setAge(client.getAge());
         retrievedClient.setTelephone(client.getTelephone());
+        //update hasPaid
 
         entityManager.getTransaction().commit();
     }
 
     @Override
-    public void delete(int id, Client client) {
+    public void delete(int id) {
         entityManager.getTransaction().begin();
 
         Client retrievedClient = entityManager.find(Client.class, id);
