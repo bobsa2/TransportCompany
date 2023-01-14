@@ -6,6 +6,6 @@ public interface Dao<T> {
 
     public void update(int id, T object);
 
-    public void delete(int id, T object);
+    public void delete(int id);
 
 }

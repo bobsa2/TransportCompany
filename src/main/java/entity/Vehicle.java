@@ -23,6 +23,15 @@ public class Vehicle {
     @JoinColumn(name = "transport_company_id", nullable = false)
     private TransportCompany transportCompany;
 
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getType() {
         return type;
     }
