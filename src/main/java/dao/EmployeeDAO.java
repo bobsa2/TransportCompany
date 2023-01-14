@@ -32,6 +32,11 @@ public class EmployeeDAO implements Dao<Employee> {
 
     @Override
     public void delete(int id, Employee object) {
+        entityManager.getTransaction().begin();
 
+        Employee retrievedEmployee = entityManager.find(Employee.class, id);
+
+        entityManager.remove(retrievedEmployee);
+        entityManager.getTransaction().commit();
     }
 }
