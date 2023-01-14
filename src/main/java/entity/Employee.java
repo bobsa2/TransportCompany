@@ -26,4 +26,36 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee")
     private Set<Qualification> qualification;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BigDecimal getIncome() {
+        return income;
+    }
+
+    public void setIncome(BigDecimal income) {
+        this.income = income;
+    }
+
+    public TransportCompany getTransportCompany() {
+        return transportCompany;
+    }
+
+    public void setTransportCompany(TransportCompany transportCompany) {
+        this.transportCompany = transportCompany;
+    }
+
+    public Set<Qualification> getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(Set<Qualification> qualification) {
+        this.qualification = qualification;
+    }
 }

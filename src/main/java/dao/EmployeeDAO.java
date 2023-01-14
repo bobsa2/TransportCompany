@@ -1,5 +1,6 @@
 package dao;
 
+import entity.Client;
 import entity.Employee;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -19,7 +20,14 @@ public class EmployeeDAO implements Dao<Employee> {
     }
 
     @Override
-    public void update(int id, Employee object) {
+    public void update(int id, Employee employee) {
+        entityManager.getTransaction().begin();
+
+        Employee retrievedEmployee = entityManager.find(entity.Employee.class, id);
+        retrievedEmployee.setName(employee.getName());
+        retrievedEmployee.setIncome(employee.getIncome());
+
+        entityManager.getTransaction().commit();
     }
 
     @Override
