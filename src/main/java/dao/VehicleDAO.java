@@ -1,5 +1,6 @@
 package dao;
 
+import entity.TransportCompany;
 import entity.Vehicle;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -19,7 +20,14 @@ public class VehicleDAO implements Dao<Vehicle> {
     }
 
     @Override
-    public void update(int id, Vehicle object) {
+    public void update(int id, Vehicle vehicle) {
+        entityManager.getTransaction().begin();
+        Vehicle retrievedVehicle = entityManager.find(entity.Vehicle.class, id);
+        retrievedVehicle.setBrand(vehicle.getBrand());
+        retrievedVehicle.setType(vehicle.getType());
+        retrievedVehicle.setModel(vehicle.getModel());
+        retrievedVehicle.setTransportCompany(vehicle.getTransportCompany());
+        entityManager.getTransaction().commit();
 
     }
 
