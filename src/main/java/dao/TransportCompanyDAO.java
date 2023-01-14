@@ -36,16 +36,9 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
         retrievedTransportCompany.setClients(transportCompany.getClients());
 
         entityManager.getTransaction().commit();
-
     }
 
     @Override
     public void delete(int id) {
-        entityManager.getTransaction().begin();
-
-        TransportCompany retrievedTransportCompany = entityManager.find(TransportCompany.class, id);
-
-        entityManager.remove(retrievedTransportCompany);
-        entityManager.getTransaction().commit();
     }
 }
