@@ -2,10 +2,10 @@ package util;
 
 public interface Dao<T> {
 
-    public <T> void create(T object);
+    public void create(T object);
 
-    public <T> void update(T object);
+    public void update(int id, T object);
 
-    public <T> void delete(T object);
+    public void delete(int id, T object);
 
 }

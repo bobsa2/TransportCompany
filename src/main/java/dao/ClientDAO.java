@@ -4,7 +4,6 @@ import entity.Client;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import jdk.jshell.spi.ExecutionControl;
 import util.Dao;
 
 public class ClientDAO implements Dao<Client> {
@@ -15,15 +14,27 @@ public class ClientDAO implements Dao<Client> {
     }
 
     @Override
-    public <Client> void create(Client client) {
+    public void create(Client client) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(client);
+        entityManager.getTransaction().commit();
     }
 
     @Override
-    public <Client> void update(Client client) {
+    public void update(int id, Client client) {
+        entityManager.getTransaction().begin();
 
+        entity.Client retrievedClient = entityManager.find(entity.Client.class, id);
+
+        retrievedClient.setName(client.getName());
+        retrievedClient.setMail(client.getMail());
+        retrievedClient.setAge(client.getAge());
+        retrievedClient.setTelephone(client.getTelephone());
+
+        entityManager.getTransaction().commit();
     }
 
     @Override
-    public <Client> void delete(Client client) {
+    public void delete(int id ,Client client) {
     }
 }
