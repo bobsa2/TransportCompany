@@ -24,7 +24,7 @@ public class ClientDAO implements Dao<Client> {
     public void update(int id, Client client) {
         entityManager.getTransaction().begin();
 
-        entity.Client retrievedClient = entityManager.find(entity.Client.class, id);
+        Client retrievedClient = entityManager.find(entity.Client.class, id);
 
         retrievedClient.setName(client.getName());
         retrievedClient.setMail(client.getMail());
@@ -35,6 +35,13 @@ public class ClientDAO implements Dao<Client> {
     }
 
     @Override
-    public void delete(int id ,Client client) {
+    public void delete(int id, Client client) {
+        entityManager.getTransaction().begin();
+
+        Client retrievedClient = entityManager.find(Client.class, id);
+
+        entityManager.remove(retrievedClient);
+
+        entityManager.getTransaction().commit();
     }
 }
