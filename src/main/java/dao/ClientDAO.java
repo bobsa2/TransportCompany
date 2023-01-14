@@ -10,8 +10,7 @@ public class ClientDAO implements Dao<Client> {
     private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("db");
     private static EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-    public ClientDAO() {
-    }
+    public ClientDAO() { }
 
     @Override
     public void create(Client client) {
@@ -41,7 +40,6 @@ public class ClientDAO implements Dao<Client> {
         Client retrievedClient = entityManager.find(Client.class, id);
 
         entityManager.remove(retrievedClient);
-
         entityManager.getTransaction().commit();
     }
 }

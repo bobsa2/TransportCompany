@@ -31,4 +31,52 @@ public class Transportation {
     @ManyToOne
     @JoinColumn(name = "transport_company_id", nullable = false)
     private TransportCompany transportCompany;
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public String getStartingPoint() {
+        return startingPoint;
+    }
+
+    public void setStartingPoint(String startingPoint) {
+        this.startingPoint = startingPoint;
+    }
+
+    public String getEndingPoint() {
+        return endingPoint;
+    }
+
+    public void setEndingPoint(String endingPoint) {
+        this.endingPoint = endingPoint;
+    }
+
+    public LocalDate getDateDeparture() {
+        return dateDeparture;
+    }
+
+    public void setDateDeparture(LocalDate dateDeparture) {
+        this.dateDeparture = dateDeparture;
+    }
+
+    public LocalDate getDateArrival() {
+        return dateArrival;
+    }
+
+    public void setDateArrival(LocalDate dateArrival) {
+        this.dateArrival = dateArrival;
+    }
+
+    public TransportCompany getTransportCompany() {
+        return transportCompany;
+    }
+
+    public void setTransportCompany(TransportCompany transportCompany) {
+        this.transportCompany = transportCompany;
+    }
 }
