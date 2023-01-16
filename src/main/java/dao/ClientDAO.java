@@ -20,7 +20,7 @@ public class ClientDAO implements Dao<Client> {
     }
 
     @Override
-    public void update(int id, Client client) {
+    public void update(long id, Client client) {
         entityManager.getTransaction().begin();
 
         Client retrievedClient = entityManager.find(entity.Client.class, id);
@@ -35,7 +35,7 @@ public class ClientDAO implements Dao<Client> {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         entityManager.getTransaction().begin();
 
         Client retrievedClient = entityManager.find(Client.class, id);

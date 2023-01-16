@@ -20,7 +20,7 @@ public class EmployeeDAO implements Dao<Employee> {
     }
 
     @Override
-    public void update(int id, Employee employee) {
+    public void update(long id, Employee employee) {
         entityManager.getTransaction().begin();
 
         Employee retrievedEmployee = entityManager.find(entity.Employee.class, id);
@@ -32,7 +32,7 @@ public class EmployeeDAO implements Dao<Employee> {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         entityManager.getTransaction().begin();
 
         Employee retrievedEmployee = entityManager.find(Employee.class, id);
