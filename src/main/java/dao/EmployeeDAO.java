@@ -23,7 +23,7 @@ public class EmployeeDAO implements Dao<Employee> {
     public void update(long id, Employee employee) {
         entityManager.getTransaction().begin();
 
-        Employee retrievedEmployee = entityManager.find(entity.Employee.class, id);
+        Employee retrievedEmployee = entityManager.find(Employee.class, id);
         retrievedEmployee.setName(employee.getName());
         retrievedEmployee.setIncome(employee.getIncome());
         //update transport company
