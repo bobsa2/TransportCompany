@@ -23,7 +23,7 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
     }
 
     @Override
-    public void update(int id, TransportCompany transportCompany) {
+    public void update(long id, TransportCompany transportCompany) {
         entityManager.getTransaction().begin();
 
         TransportCompany retrievedTransportCompany = entityManager.find(entity.TransportCompany.class, id);
@@ -39,7 +39,7 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         entityManager.getTransaction().begin();
 
         TransportCompany retrievedTransportCompany = entityManager.find(TransportCompany.class, id);

@@ -20,7 +20,7 @@ public class VehicleDAO implements Dao<Vehicle> {
     }
 
     @Override
-    public void update(int id, Vehicle vehicle) {
+    public void update(long id, Vehicle vehicle) {
         entityManager.getTransaction().begin();
         Vehicle retrievedVehicle = entityManager.find(entity.Vehicle.class, id);
         retrievedVehicle.setBrand(vehicle.getBrand());
@@ -32,7 +32,7 @@ public class VehicleDAO implements Dao<Vehicle> {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         entityManager.getTransaction().begin();
 
         Vehicle retrievedVehicle = entityManager.find(Vehicle.class, id);
