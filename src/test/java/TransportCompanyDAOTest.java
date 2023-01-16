@@ -33,9 +33,10 @@ public class TransportCompanyDAOTest {
         testTransportCompany.setAddress("TestAddress");
         testTransportCompany.setTotalIncome(BigDecimal.ONE);
     }
+
     @AfterAll()
     public static void afterEach() {
-        if (entityManager.getTransaction().isActive()){
+        if (entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().commit();
         }
 
@@ -47,9 +48,10 @@ public class TransportCompanyDAOTest {
         entityManager.createNativeQuery("TRUNCATE TABLE transport_company").executeUpdate();
         entityManager.getTransaction().commit();
     }
+
     @Test
     @Order(1)
-    public void createShouldExecuteSuccessfully(){
+    public void createShouldExecuteSuccessfully() {
         //Arrange
         String selectedTransportCompanyQuery = "SELECT * FROM transport_company AS tp WHERE tp.name = 'TestName'";
 
@@ -73,9 +75,10 @@ public class TransportCompanyDAOTest {
 
         assertEquals(0, 0);
     }
+
     @Test
     @Order(2)
-    public void updateShouldExecuteSuccessfully(){
+    public void updateShouldExecuteSuccessfully() {
         //Arrange
         String selectedTransportCompanyQuery = "SELECT * FROM transport_company AS tp WHERE tp.name = 'UpdatedName'";
         EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
@@ -88,7 +91,7 @@ public class TransportCompanyDAOTest {
         testTransportCompany.setTransportations(new HashSet<Transportation>());
 
         //Act
-        transportCompanyDAO.update(1,testTransportCompany);
+        transportCompanyDAO.update(1, testTransportCompany);
         ArrayList<TransportCompany> resultList = (ArrayList<TransportCompany>) entityManager
                 .createNativeQuery(selectedTransportCompanyQuery, TransportCompany.class)
                 .getResultList();
@@ -99,5 +102,27 @@ public class TransportCompanyDAOTest {
                 .compare(testTransportCompany, resultList.get(0));
 
         assertEquals(0, 0);
+    }
+
+    @Test
+    @Order(3)
+    public void deleteShouldExecuteSuccessfully() {
+        //Arrange
+        EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
+        //Act
+        transportCompanyDAO.delete(1);
+        int actualCount = entityManager
+                .createNativeQuery("SELECT * FROM transport_company")
+                .getResultList()
+                .size();
+
+        //Assert
+        if (actualCount > 1){
+            assertEquals(6, actualCount);
+        }
+        else{
+            assertEquals(0, actualCount);
+        }
+
     }
 }
