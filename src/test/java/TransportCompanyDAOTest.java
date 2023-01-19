@@ -26,12 +26,21 @@ public class TransportCompanyDAOTest {
     public static void init() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("db");
         entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
 
         VehiclesDAOTest.testVehicle.setType("TestType");
         testTransportCompany.setName("TestName");
         testTransportCompany.setAddress("TestAddress");
         testTransportCompany.setTotalIncome(BigDecimal.ONE);
+    }
+
+    @BeforeEach()
+    public void beforeEach() {
+        if (entityManager.getTransaction().isActive()){
+            entityManager.getTransaction().commit();
+        }
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
+        entityManager.getTransaction().commit();
     }
 
     @AfterAll()
@@ -40,9 +49,6 @@ public class TransportCompanyDAOTest {
             entityManager.getTransaction().commit();
         }
 
-        entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
-        entityManager.getTransaction().commit();
 
         entityManager.getTransaction().begin();
         entityManager.createNativeQuery("TRUNCATE TABLE transport_company").executeUpdate();
@@ -53,6 +59,7 @@ public class TransportCompanyDAOTest {
     @Order(1)
     public void createShouldExecuteSuccessfully() {
         //Arrange
+        entityManager.getTransaction().begin();
         String selectedTransportCompanyQuery = "SELECT * FROM transport_company AS tp WHERE tp.name = 'TestName'";
 
         ArrayList<TransportCompany> resultList = (ArrayList<TransportCompany>) entityManager
@@ -80,6 +87,7 @@ public class TransportCompanyDAOTest {
     @Order(2)
     public void updateShouldExecuteSuccessfully() {
         //Arrange
+        entityManager.getTransaction().begin();
         String selectedTransportCompanyQuery = "SELECT * FROM transport_company AS tp WHERE tp.name = 'UpdatedName'";
         EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
         testTransportCompany.setName("UpdatedName");
@@ -117,10 +125,9 @@ public class TransportCompanyDAOTest {
                 .size();
 
         //Assert
-        if (actualCount > 1){
+        if (actualCount > 1) {
             assertEquals(6, actualCount);
-        }
-        else{
+        } else {
             assertEquals(0, actualCount);
         }
 
