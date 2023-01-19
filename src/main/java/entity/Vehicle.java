@@ -20,7 +20,7 @@ public class Vehicle {
     private String model;
 
     @ManyToOne
-    @JoinColumn(name = "transport_company_id", nullable = false)
+    @JoinColumn(name = "transport_company_id", nullable = true)
     private TransportCompany transportCompany;
 
 
