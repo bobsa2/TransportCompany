@@ -14,7 +14,7 @@ public class Qualification {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
+    @JoinColumn(name = "employee_id", nullable = true)
     private Employee employee;
 
     public String getName() {
