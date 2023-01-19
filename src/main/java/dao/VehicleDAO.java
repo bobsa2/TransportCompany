@@ -1,5 +1,6 @@
 package dao;
 
+import entity.Client;
 import entity.TransportCompany;
 import entity.Vehicle;
 import jakarta.persistence.EntityManager;
@@ -21,23 +22,36 @@ public class VehicleDAO implements Dao<Vehicle> {
 
     @Override
     public void update(long id, Vehicle vehicle) {
-        entityManager.getTransaction().begin();
-        Vehicle retrievedVehicle = entityManager.find(entity.Vehicle.class, id);
-        retrievedVehicle.setBrand(vehicle.getBrand());
-        retrievedVehicle.setType(vehicle.getType());
-        retrievedVehicle.setModel(vehicle.getModel());
-        retrievedVehicle.setTransportCompany(vehicle.getTransportCompany());
-        entityManager.getTransaction().commit();
+        if (isValid(id)) {
+            entityManager.getTransaction().begin();
+            Vehicle retrievedVehicle = entityManager.find(entity.Vehicle.class, id);
+            retrievedVehicle.setBrand(vehicle.getBrand());
+            retrievedVehicle.setType(vehicle.getType());
+            retrievedVehicle.setModel(vehicle.getModel());
+            retrievedVehicle.setTransportCompany(vehicle.getTransportCompany());
+            entityManager.getTransaction().commit();
+        }
 
     }
 
     @Override
     public void delete(long id) {
-        entityManager.getTransaction().begin();
+        if (isValid(id)) {
+            entityManager.getTransaction().begin();
 
-        Vehicle retrievedVehicle = entityManager.find(Vehicle.class, id);
+            Vehicle retrievedVehicle = entityManager.find(Vehicle.class, id);
 
-        entityManager.remove(retrievedVehicle);
-        entityManager.getTransaction().commit();
+            entityManager.remove(retrievedVehicle);
+            entityManager.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public boolean isValid(long id) {
+        String idQuery = String.format("SELECT * FROM client WHERE id = %s", id);
+
+        int resultCount = entityManager.createNativeQuery(idQuery, Client.class).getResultList().size();
+
+        return resultCount > 0;
     }
 }

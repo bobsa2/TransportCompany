@@ -23,24 +23,39 @@ public class ClientDAO implements Dao<Client> {
     public void update(long id, Client client) {
         entityManager.getTransaction().begin();
 
-        Client retrievedClient = entityManager.find(entity.Client.class, id);
+        if (isValid(id)) {
 
-        retrievedClient.setName(client.getName());
-        retrievedClient.setMail(client.getMail());
-        retrievedClient.setAge(client.getAge());
-        retrievedClient.setTelephone(client.getTelephone());
-        //update hasPaid
+            Client retrievedClient = entityManager.find(entity.Client.class, id);
 
-        entityManager.getTransaction().commit();
+            retrievedClient.setName(client.getName());
+            retrievedClient.setMail(client.getMail());
+            retrievedClient.setAge(client.getAge());
+            retrievedClient.setTelephone(client.getTelephone());
+            retrievedClient.setHasPaid(client.getHasPaid());
+
+            entityManager.getTransaction().commit();
+        }
     }
 
     @Override
     public void delete(long id) {
         entityManager.getTransaction().begin();
 
-        Client retrievedClient = entityManager.find(Client.class, id);
+        if (isValid(id)) {
 
-        entityManager.remove(retrievedClient);
-        entityManager.getTransaction().commit();
+            Client retrievedClient = entityManager.find(Client.class, id);
+
+            entityManager.remove(retrievedClient);
+            entityManager.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public boolean isValid(long id) {
+        String idQuery = String.format("SELECT * FROM client WHERE id = %s", id);
+
+        int resultCount = entityManager.createNativeQuery(idQuery, Client.class).getResultList().size();
+
+        return resultCount > 0;
     }
 }

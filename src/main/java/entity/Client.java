@@ -60,7 +60,7 @@ public class Client {
         this.telephone = telephone;
     }
 
-    public boolean isHasPaid() {
+    public boolean getHasPaid() {
         return hasPaid;
     }
 

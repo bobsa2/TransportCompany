@@ -8,4 +8,6 @@ public interface Dao<T> {
 
     public void delete(long id);
 
+    public boolean isValid(long id);
+
 }
