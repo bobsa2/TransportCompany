@@ -2,10 +2,13 @@ package dao;
 
 import entity.Client;
 import entity.Employee;
+import entity.Qualification;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import util.Dao;
+
+import java.util.ArrayList;
 
 public class EmployeeDAO implements Dao<Employee> {
 
@@ -36,10 +39,18 @@ public class EmployeeDAO implements Dao<Employee> {
     @Override
     public void delete(long id) {
         if (isValid(id)) {
-            entityManager.getTransaction().begin();
 
             Employee retrievedEmployee = entityManager.find(Employee.class, id);
 
+            String qualificationsQuery = "SELECT * FROM Qualification WHERE employee_id = " + id;
+            ArrayList<Qualification> qualifications = (ArrayList<Qualification>) entityManager
+                    .createNativeQuery(qualificationsQuery).getResultList();
+            if (qualifications.size() > 0) {
+                qualifications.forEach(qualification -> {
+                    qualification.setEmployee(null);
+                });
+            }
+            entityManager.getTransaction().begin();
             entityManager.remove(retrievedEmployee);
             entityManager.getTransaction().commit();
         }
@@ -47,9 +58,9 @@ public class EmployeeDAO implements Dao<Employee> {
 
     @Override
     public boolean isValid(long id) {
-        String idQuery = String.format("SELECT * FROM client WHERE id = %s", id);
+        String idQuery = String.format("SELECT * FROM Employee WHERE id = %s", id);
 
-        int resultCount = entityManager.createNativeQuery(idQuery, Client.class).getResultList().size();
+        int resultCount = entityManager.createNativeQuery(idQuery, Employee.class).getResultList().size();
 
         return resultCount > 0;
     }
