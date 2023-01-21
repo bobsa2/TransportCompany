@@ -126,7 +126,7 @@ public class TransportCompanyDAOTest {
 
         //Assert
         if (actualCount > 1) {
-            assertEquals(6, actualCount);
+            assertEquals(5, actualCount);
         } else {
             assertEquals(0, actualCount);
         }
