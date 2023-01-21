@@ -28,6 +28,8 @@ public class Client {
     @Column(name = "has_paid", nullable = false)
     private boolean hasPaid;
 
+    @ManyToMany
+    Set<TransportCompany> transportCompanies;
     public String getName() {
         return name;
     }
@@ -76,6 +78,4 @@ public class Client {
         this.transportCompanies = transportCompanies;
     }
 
-    @ManyToMany
-    Set<TransportCompany> transportCompanies;
 }
