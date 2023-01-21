@@ -130,6 +130,7 @@ public class EmployeeDAOTest {
                 .createNativeQuery(selectEmployeeQuery, Employee.class)
                 .getResultList();
 
+        //Actual
         int actual = Comparator.comparing(Employee::getName)
                 .thenComparing(Employee::getIncome)
                 .compare(testEmployee, resultList.get(0));

@@ -52,7 +52,7 @@ public class ClientDAO implements Dao<Client> {
 
     @Override
     public boolean isValid(long id) {
-        String idQuery = String.format("SELECT * FROM client WHERE id = %s", id);
+        String idQuery = String.format("SELECT * FROM Client WHERE id = %s", id);
 
         int resultCount = entityManager.createNativeQuery(idQuery, Client.class).getResultList().size();
 
