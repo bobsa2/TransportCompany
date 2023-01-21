@@ -39,8 +39,6 @@ public class EmployeeRepository {
                 employee.setIncome(employee_salaries[index]);
                 employee.setName(employee_names[index]);
 
-                TransportCompany transportCompany = (TransportCompany) TransportCompanyRepository.transportCompanies.toArray()[index];
-                employee.setTransportCompany(transportCompany);
 
                 return employee;
 

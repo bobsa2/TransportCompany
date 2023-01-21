@@ -6,14 +6,18 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
+import repository.ClientRepository;
+import util.EntitySeeder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Vector;
 
 import static java.util.Comparator.comparing;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClientDAOTest {
     static EntityManager entityManager;
     static ClientDAO clientDAO = new ClientDAO();
@@ -44,8 +48,8 @@ public class ClientDAOTest {
 
     }
 
-    @AfterEach
-    public void afterEach() {
+    @BeforeAll
+    public static void afterEach() {
         entityManager.getTransaction().begin();
         entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
         entityManager.getTransaction().commit();
@@ -57,8 +61,10 @@ public class ClientDAOTest {
     }
 
     @Test
+    @Order(2)
     public void createShouldExecuteSuccessfully() {
         //Arrange
+        entityManager.getTransaction().begin();
         String selectClientQuery = "SELECT * FROM Client AS v WHERE v.Name = 'TestName'";
 
         //Act
@@ -76,20 +82,17 @@ public class ClientDAOTest {
                 .thenComparing(Client::getTelephone)
                 .compare(testClient, resultList.get(0));
 
-        assertEquals(0, 0);
+        entityManager.getTransaction().commit();
+        assertEquals(0, actual);
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     public void updateShouldExecuteSuccessfully() {
         //Arrange
+        entityManager.getTransaction().begin();
         String selectClientQuery = "SELECT * FROM Client AS v WHERE v.Name = 'UpdatedName'";
-
-        if (entityManager.find(Client.class, 1) == null){
-            entityManager.getTransaction().begin();
-            entityManager.persist(testClient);
-            entityManager.getTransaction().commit();
-        }
+        EntitySeeder.seedRecords(ClientRepository.clients);
 
         testClient.setName("UpdatedName");
         testClient.setTelephone("UpdatedNumber");
@@ -100,8 +103,10 @@ public class ClientDAOTest {
         clientDAO.update(1, testClient);
 
         ArrayList<Client> resultList = (ArrayList<Client>) entityManager
-                .createNativeQuery(selectClientQuery, Client.class)
+                .createNativeQuery("SELECT * FROM Client", Client.class)
                 .getResultList();
+
+        entityManager.refresh(resultList.get(0));
 
         //Assert
         int actual = Comparator.comparing(Client::getName)
@@ -111,17 +116,25 @@ public class ClientDAOTest {
                 .thenComparing(Client::getMail)
                 .compare(testClient, resultList.get(0));
 
+        entityManager.getTransaction().commit();
         assertEquals(0, actual);
     }
     @Test
-    @Order(3)
+    @Order(1)
     public void deleteShouldExecuteSuccessfully(){
         //Arrange
-        if (entityManager.find(Client.class, 1) == null){
-            entityManager.getTransaction().begin();
-            entityManager.persist(testClient);
-            entityManager.getTransaction().commit();
-        }
+        entityManager.getTransaction().begin();
+
+
+        Client client = new Client();
+        client.setMail("312");
+        client.setName("T123est");
+        client.setHasPaid(true);
+        client.setAge(35215);
+        client.setTelephone("(251251251251213)");
+
+        clientDAO.create(client);
+
         //Act
         clientDAO.delete(1);
         //Assert
@@ -129,5 +142,8 @@ public class ClientDAOTest {
                 .createNativeQuery("SELECT * FROM client")
                 .getResultList()
                 .size();
+
+        entityManager.getTransaction().commit();
+        assertEquals(0, actualCount);
     }
 }

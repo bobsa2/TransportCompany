@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
+import repository.EmployeeRepository;
 import repository.TransportCompanyRepository;
 import util.EntitySeeder;
 
@@ -39,6 +40,10 @@ public class EmployeeDAOTest {
         entityManager.createNativeQuery("TRUNCATE TABLE transport_company").executeUpdate();
         entityManager.getTransaction().commit();
 
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("TRUNCATE TABLE employee").executeUpdate();
+        entityManager.getTransaction().commit();
+
     }
     @AfterEach
     public void afterEach(){
@@ -50,21 +55,17 @@ public class EmployeeDAOTest {
         entityManager.createNativeQuery("TRUNCATE TABLE transport_company").executeUpdate();
         entityManager.getTransaction().commit();
 
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("TRUNCATE TABLE employee").executeUpdate();
+        entityManager.getTransaction().commit();
+
     }
     @Test
-    @Order(1)
+    @Order(2)
     public void createShouldExecuteSuccessfully() {
         // Arrange
+        entityManager.getTransaction().begin();
         String selectEmployeeQuery = "SELECT * FROM Employee AS v WHERE v.Name = 'TestName'";
-
-        TransportCompany testTransportCompany = new TransportCompany();
-        testTransportCompany.setName("TestName");
-        testTransportCompany.setAddress("TestAddress");
-        testTransportCompany.setTotalIncome(BigDecimal.ONE);
-
-        new TransportCompanyDAO().create(testTransportCompany);
-
-        testEmployee.setTransportCompany(testTransportCompany);
 
         // Act
         employeeDAO.create(testEmployee);
@@ -81,98 +82,62 @@ public class EmployeeDAOTest {
                 .thenComparing(Employee::getIncome)
                 .compare(testEmployee, resultList.get(0));
 
-        assertEquals(0, 0);
+        entityManager.getTransaction().commit();
+        assertEquals(0, actual);
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     public void updateShouldExecuteSuccessfully() {
         // Arrange
-        String selectEmployeeQuery = "SELECT * FROM Employee AS v WHERE v.Name = 'TestName'";
+        entityManager.getTransaction().begin();
+        String selectEmployeeQuery = "SELECT * FROM Employee AS v WHERE v.Name = 'UpdatedName'";
+
+        EntitySeeder.seedRecords(EmployeeRepository.employees);
+
+        testEmployee.setName("UpdatedName");
+        testEmployee.setIncome(BigDecimal.ONE);
+
+        //Act
+        employeeDAO.update(1, testEmployee);
+
 
         ArrayList<Employee> resultList = (ArrayList<Employee>) entityManager
                 .createNativeQuery(selectEmployeeQuery, Employee.class)
                 .getResultList();
 
-        TransportCompany testTransportCompany = new TransportCompany();
-        testTransportCompany.setName("TestName");
-        testTransportCompany.setAddress("TestAddress");
-        testTransportCompany.setTotalIncome(BigDecimal.ONE);
-
-        if (entityManager.find(TransportCompany.class,1) == null){
-            entityManager.getTransaction().begin();
-            entityManager.persist(testTransportCompany);
-            entityManager.getTransaction().commit();
-        }
-
-        TransportCompany transportCompany = (TransportCompany) entityManager
-                .find(TransportCompany.class, (long)1);
-
-        testEmployee.setTransportCompany(transportCompany);
-
-        entityManager.getTransaction().begin();
-        employeeDAO.create(testEmployee);
-        entityManager.getTransaction().commit();
-
-        resultList = (ArrayList<Employee>) entityManager
-                .createNativeQuery(selectEmployeeQuery, Employee.class)
-                .getResultList();
-
-        testEmployee.setName("UpdatedName");
-        testEmployee.setIncome(BigDecimal.ONE);
-
-
-        //Act
-        employeeDAO.update(resultList.get(0).getId(), testEmployee);
-
-        selectEmployeeQuery = "SELECT * FROM Employee AS v WHERE v.Name = 'UpdatedName'";
-        resultList = (ArrayList<Employee>) entityManager
-                .createNativeQuery(selectEmployeeQuery, Employee.class)
-                .getResultList();
+        entityManager.refresh(resultList.get(0));
 
         //Actual
         int actual = Comparator.comparing(Employee::getName)
                 .thenComparing(Employee::getIncome)
                 .compare(testEmployee, resultList.get(0));
 
-        assertEquals(0, 0);
+        entityManager.getTransaction().commit();
+        assertEquals(0, actual);
 
     }
     @Test
-    @Order(3)
+    @Order(1)
     public void deleteShouldExecuteSuccessfully() {
         //Arrange
-        String selectEmployeeQuery = "SELECT * FROM TransportCompany AS v WHERE v.Name = 'UpdatedName'";
-
-        TransportCompany testTransportCompany = new TransportCompany();
-
-        testTransportCompany.setName("TestName");
-        testTransportCompany.setAddress("TestAddress");
-        testTransportCompany.setTotalIncome(BigDecimal.ONE);
-
-        if (entityManager.find(TransportCompany.class,1) == null){
-            entityManager.getTransaction().begin();
-            entityManager.persist(testTransportCompany);
-            entityManager.getTransaction().commit();
-        }
-        TransportCompany transportCompany = (TransportCompany) entityManager
-                .find(TransportCompany.class, (long)1);
-
-        testEmployee.setTransportCompany(transportCompany);
-
         entityManager.getTransaction().begin();
-        employeeDAO.create(testEmployee);
-        entityManager.getTransaction().commit();
+        Employee currentEmployee = new Employee();
+        currentEmployee.setName("test");
+        currentEmployee.setIncome(BigDecimal.TEN);
+
+        employeeDAO.create(currentEmployee);
 
         //Act
         employeeDAO.delete(1);
 
         int actualCount = entityManager
-                .createNativeQuery("SELECT * FROM vehicle")
+                .createNativeQuery("SELECT * FROM Employee")
                 .getResultList()
                 .size();
 
         //Assert
+        entityManager.getTransaction().commit();
         assertEquals(0, actualCount);
     }
 }

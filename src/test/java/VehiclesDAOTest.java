@@ -23,14 +23,27 @@ public class VehiclesDAOTest {
     public static void init() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("db");
         entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
 
         testVehicle.setType("TestType");
         testVehicle.setBrand("TestBrand");
         testVehicle.setModel("TestModel");
     }
-    @AfterAll()
-    public static void afterEach() {
+    @BeforeEach()
+    public void beforeEach() {
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
+        entityManager.getTransaction().commit();
+
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("TRUNCATE TABLE vehicle").executeUpdate();
+        entityManager.getTransaction().commit();
+    }
+    @AfterEach
+    public void afterEach(){
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
+        entityManager.getTransaction().commit();
+
         entityManager.getTransaction().begin();
         entityManager.createNativeQuery("TRUNCATE TABLE vehicle").executeUpdate();
         entityManager.getTransaction().commit();
@@ -39,24 +52,13 @@ public class VehiclesDAOTest {
     @Order(1)
     public void createShouldExecuteSuccessfully() {
         // Arrange
-        String selectVehicleQuery = "SELECT * FROM Vehicle AS v WHERE v.model = 'TestModel'";
-        EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
-
-        TransportCompany transportCompany = entityManager
-                .find(TransportCompany.class, 1);
-
-        testVehicle.setTransportCompany(transportCompany);
+        entityManager.getTransaction().begin();
+        String selectVehicleQuery = "SELECT * FROM Vehicle Where Model = 'TestModel'";
 
         // Act
-        ArrayList<Vehicle> resultList = (ArrayList<Vehicle>) entityManager
-                .createNativeQuery(selectVehicleQuery, Vehicle.class)
-                .getResultList();
+        vehicleDAO.create(testVehicle);
 
-        if (resultList.size() == 0) {
-            vehicleDAO.create(testVehicle);
-            entityManager.getTransaction().commit();
-        }
-        resultList = (ArrayList<Vehicle>) entityManager
+        ArrayList<Vehicle> resultList = (ArrayList<Vehicle>) entityManager
                 .createNativeQuery(selectVehicleQuery, Vehicle.class)
                 .getResultList();
 
@@ -66,76 +68,50 @@ public class VehiclesDAOTest {
                 .thenComparing(Vehicle::getType)
                 .compare(testVehicle, resultList.get(0));
 
+        entityManager.getTransaction().commit();
         assertEquals(0, 0);
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     public void updateShouldExecuteSuccessfully() {
         // Arrange
-        String selectVehicleQuery = "SELECT * FROM Vehicle AS v WHERE v.model = 'TestModel'";
-        ArrayList<Vehicle> resultList = (ArrayList<Vehicle>) entityManager
-                .createNativeQuery(selectVehicleQuery, Vehicle.class)
-                .getResultList();
+        entityManager.getTransaction().begin();
+        String selectVehicleQuery = "SELECT * FROM Vehicle AS v WHERE v.model = 'UpdatedModel'";
 
-        EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
 
-        TransportCompany transportCompany = entityManager
-                .find(TransportCompany.class, 2);
-
-        testVehicle.setTransportCompany(transportCompany);
-
-        if (resultList.size() == 0) {
-            vehicleDAO.create(testVehicle);
-            entityManager.getTransaction().commit();
-        }
-
-        resultList = (ArrayList<Vehicle>) entityManager
-                .createNativeQuery(selectVehicleQuery, Vehicle.class)
-                .getResultList();
+        EntitySeeder.seedRecords(VehicleRepository.vehicles);
 
         testVehicle.setType("UpdatedType");
         testVehicle.setBrand("UpdatedBrand");
         testVehicle.setModel("UpdatedModel");
 
-
         //Act
-        vehicleDAO.update(resultList.get(0).getId(), testVehicle);
+        vehicleDAO.update(1, testVehicle);
 
-        selectVehicleQuery = "SELECT * FROM Vehicle AS v WHERE v.model = 'UpdatedModel'";
-        resultList = (ArrayList<Vehicle>) entityManager
-                .createNativeQuery(String.format(selectVehicleQuery, "TestModel"), Vehicle.class)
+        ArrayList<Vehicle> resultList = (ArrayList<Vehicle>) entityManager
+                .createNativeQuery(selectVehicleQuery, Vehicle.class)
                 .getResultList();
+
+        entityManager.refresh(resultList.get(0));
 
         int actual = Comparator.comparing(Vehicle::getModel)
                 .thenComparing(Vehicle::getBrand)
                 .thenComparing(Vehicle::getType)
                 .compare(testVehicle, resultList.get(0));
 
-        assertEquals(0, 0);
+        entityManager.getTransaction().commit();
+        assertEquals(0, actual);
 
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     public void deleteShouldExecuteSuccessfully() {
         //Arrange
-        String selectVehicleQuery = "SELECT * FROM Vehicle AS v WHERE v.model = 'UpdatedModel'";
-        EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
+        entityManager.getTransaction().begin();
 
-        TransportCompany transportCompany = entityManager
-                .find(TransportCompany.class, 1);
-
-        testVehicle.setTransportCompany(transportCompany);
-
-        ArrayList<Vehicle> resultList = (ArrayList<Vehicle>) entityManager
-                .createNativeQuery(selectVehicleQuery, Vehicle.class)
-                .getResultList();
-
-        if (resultList.size() == 0) {
-            vehicleDAO.create(testVehicle);
-            entityManager.getTransaction().commit();
-        }
+        vehicleDAO.create(testVehicle);
 
         //Act
         vehicleDAO.delete(1);
@@ -146,6 +122,7 @@ public class VehiclesDAOTest {
                 .size();
 
         //Assert
+        entityManager.getTransaction().commit();
         assertEquals(0, actualCount);
     }
 }

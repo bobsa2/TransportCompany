@@ -41,6 +41,10 @@ public class TransportCompanyDAOTest {
         entityManager.getTransaction().begin();
         entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
         entityManager.getTransaction().commit();
+
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("TRUNCATE TABLE transport_company").executeUpdate();
+        entityManager.getTransaction().commit();
     }
 
     @AfterAll()
@@ -48,7 +52,9 @@ public class TransportCompanyDAOTest {
         if (entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().commit();
         }
-
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
+        entityManager.getTransaction().commit();
 
         entityManager.getTransaction().begin();
         entityManager.createNativeQuery("TRUNCATE TABLE transport_company").executeUpdate();
@@ -62,15 +68,10 @@ public class TransportCompanyDAOTest {
         entityManager.getTransaction().begin();
         String selectedTransportCompanyQuery = "SELECT * FROM transport_company AS tp WHERE tp.name = 'TestName'";
 
-        ArrayList<TransportCompany> resultList = (ArrayList<TransportCompany>) entityManager
-                .createNativeQuery(selectedTransportCompanyQuery, TransportCompany.class)
-                .getResultList();
         //Act
-        if (resultList.size() == 0) {
-            transportCompanyDAO.create(testTransportCompany);
-            entityManager.getTransaction().commit();
-        }
-        resultList = (ArrayList<TransportCompany>) entityManager
+        transportCompanyDAO.create(testTransportCompany);
+
+        ArrayList<TransportCompany> resultList = (ArrayList<TransportCompany>) entityManager
                 .createNativeQuery(selectedTransportCompanyQuery, TransportCompany.class)
                 .getResultList();
 
@@ -80,7 +81,8 @@ public class TransportCompanyDAOTest {
                 .thenComparing(TransportCompany::getAddress)
                 .compare(testTransportCompany, resultList.get(0));
 
-        assertEquals(0, 0);
+        entityManager.getTransaction().commit();
+        assertEquals(0, actual);
     }
 
     @Test
@@ -90,6 +92,7 @@ public class TransportCompanyDAOTest {
         entityManager.getTransaction().begin();
         String selectedTransportCompanyQuery = "SELECT * FROM transport_company AS tp WHERE tp.name = 'UpdatedName'";
         EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
+
         testTransportCompany.setName("UpdatedName");
         testTransportCompany.setTotalIncome(BigDecimal.TEN);
         testTransportCompany.setAddress("UpdatedAddress");
@@ -103,20 +106,25 @@ public class TransportCompanyDAOTest {
         ArrayList<TransportCompany> resultList = (ArrayList<TransportCompany>) entityManager
                 .createNativeQuery(selectedTransportCompanyQuery, TransportCompany.class)
                 .getResultList();
+
+        entityManager.refresh(resultList.get(0));
         //Assert
         int actual = Comparator.comparing(TransportCompany::getName)
                 .thenComparing(TransportCompany::getTotalIncome)
                 .thenComparing(TransportCompany::getAddress)
                 .compare(testTransportCompany, resultList.get(0));
 
-        assertEquals(0, 0);
+        entityManager.getTransaction().commit();
+        assertEquals(0, actual);
     }
 
     @Test
     @Order(3)
     public void deleteShouldExecuteSuccessfully() {
         //Arrange
-        EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
+        entityManager.getTransaction().begin();
+        transportCompanyDAO.create(testTransportCompany);
+
         //Act
         transportCompanyDAO.delete(1);
         int actualCount = entityManager
@@ -125,11 +133,8 @@ public class TransportCompanyDAOTest {
                 .size();
 
         //Assert
-        if (actualCount > 1) {
-            assertEquals(5, actualCount);
-        } else {
-            assertEquals(0, actualCount);
-        }
+        entityManager.getTransaction().commit();
+        assertEquals(0, actualCount);
 
     }
 }
