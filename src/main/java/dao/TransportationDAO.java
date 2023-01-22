@@ -7,8 +7,13 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import util.Dao;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class TransportationDAO implements Dao<Transportation> {
 
@@ -81,5 +86,50 @@ public class TransportationDAO implements Dao<Transportation> {
         ArrayList<Transportation> transportations = getTransportations();
         transportations.stream().filter(transportation -> transportation.getEndingPoint().equals(destination)).forEach(System.out::println);
 
+    }
+
+    public File createFile() {
+        File file = new File("C:\\Users\\user\\TransportCompany\\TransportationFile.txt");
+        try {
+            if (file.createNewFile()) {
+                System.out.println("File created: " + file.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    public void saveTransportationsToFile(File file) {
+
+        ArrayList<Transportation> transportations = getTransportations();
+
+        try {
+            FileWriter myWriter = new FileWriter("TransportationFile.txt");
+            myWriter.write(String.valueOf(transportations));
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public void extractTransportationsData(File file) {
+
+        try {
+            Scanner myReader = new Scanner(file);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                System.out.println(data);
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 }
