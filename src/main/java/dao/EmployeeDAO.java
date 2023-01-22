@@ -3,11 +3,13 @@ package dao;
 import entity.Client;
 import entity.Employee;
 import entity.Qualification;
+import entity.TransportCompany;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import util.Dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class EmployeeDAO implements Dao<Employee> {
@@ -55,5 +57,41 @@ public class EmployeeDAO implements Dao<Employee> {
         int resultCount = entityManager.createNativeQuery(idQuery, Employee.class).getResultList().size();
 
         return resultCount > 0;
+    }
+
+    public ArrayList<Employee> getEmployees() {
+        String idQuery = "SELECT * FROM employee";
+
+        return (ArrayList<Employee>) entityManager.createNativeQuery(idQuery, Employee.class).getResultList();
+    }
+
+    public void sortEmployeesByQualification(){
+
+        ArrayList<Employee> employees = getEmployees();
+
+        employees.sort(Employee.employeeComparatorQualification);
+        employees.forEach(System.out::println);
+    }
+
+    public void sortEmployeesByIncome(){
+
+        ArrayList<Employee> employees = getEmployees();
+
+        employees.sort(Employee.employeeComparatorIncome);
+        employees.forEach(System.out::println);
+    }
+
+    public void filterEmployeesByQualification(Qualification qualification) {
+
+        ArrayList<Employee> employees = getEmployees();
+        employees.stream().filter(employee -> employee.getQualification().contains(qualification)).forEach(System.out::println);
+
+    }
+
+    public void filterEmployeesByIncome(BigDecimal value) {
+
+        ArrayList<Employee> employees = getEmployees();
+        employees.stream().filter(employee -> employee.getIncome().compareTo(value) > 0).forEach(System.out::println);
+
     }
 }

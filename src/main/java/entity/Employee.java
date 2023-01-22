@@ -6,12 +6,13 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Comparator;
 import java.util.Set;
 
 @Entity
 @Table(name = "employee")
 
-public class Employee {
+public class Employee implements Comparable<Employee>{
 
     public Employee(){
         this.qualifications = new HashSet<Qualification>();
@@ -76,5 +77,34 @@ public class Employee {
 
     public void setQualification(Set<Qualification> qualification) {
         this.qualifications = qualification;
+    }
+
+    @Override
+    public int compareTo(Employee employee) {
+        return this.income.compareTo(employee.income);
+    }
+
+    public static Comparator<Employee> employeeComparatorQualification = new Comparator<Employee>() {
+        @Override
+        public int compare(Employee employee1, Employee employee2) {
+            return Integer.compare(employee1.getQualification().size(), employee2.getQualification().size());
+        }
+    };
+
+    public static Comparator<Employee> employeeComparatorIncome = new Comparator<Employee>() {
+        @Override
+        public int compare(Employee employee1, Employee employee2) {
+            return employee1.getIncome().compareTo(employee2.getIncome());
+        }
+    };
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", income=" + income +
+                ", transportCompany=" + transportCompany +
+                ", qualification=" + qualification +
+                '}';
     }
 }
