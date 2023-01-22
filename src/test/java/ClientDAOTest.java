@@ -7,7 +7,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 import repository.ClientRepository;
-import repository.TransportCompanyRepository;
 import util.EntitySeeder;
 
 import java.math.BigDecimal;
@@ -93,8 +92,6 @@ public class ClientDAOTest {
         //Arrange
         entityManager.getTransaction().begin();
         String selectClientQuery = "SELECT * FROM Client AS v WHERE v.Name = 'UpdatedName'";
-
-        EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
         EntitySeeder.seedRecords(ClientRepository.clients);
 
         testClient.setName("UpdatedName");
