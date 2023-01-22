@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "transportation")
 
-public class Transportation {
+public class Transportation implements Comparable<Transportation>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,5 +89,23 @@ public class Transportation {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Override
+    public int compareTo(Transportation transportation) {
+        return this.endingPoint.compareTo(transportation.endingPoint);
+    }
+
+    @Override
+    public String toString() {
+        return "Transportation{" +
+                "cargo='" + cargo + '\'' +
+                ", price=" + price +
+                ", startingPoint='" + startingPoint + '\'' +
+                ", endingPoint='" + endingPoint + '\'' +
+                ", dateDeparture=" + dateDeparture +
+                ", dateArrival=" + dateArrival +
+                ", transportCompany=" + transportCompany +
+                '}';
     }
 }

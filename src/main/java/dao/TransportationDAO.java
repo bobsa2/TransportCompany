@@ -7,6 +7,9 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import util.Dao;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class TransportationDAO implements Dao<Transportation> {
 
     private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("db");
@@ -57,5 +60,26 @@ public class TransportationDAO implements Dao<Transportation> {
         int resultCount = entityManager.createNativeQuery(idQuery, Transportation.class).getResultList().size();
 
         return resultCount > 0;
+    }
+
+    public ArrayList<Transportation> getTransportations() {
+        String idQuery = "SELECT * FROM transportation";
+
+        return (ArrayList<Transportation>) entityManager.createNativeQuery(idQuery, Transportation.class).getResultList();
+    }
+
+    public void sortTransportationsByDestination(){
+
+        ArrayList<Transportation> transportations = getTransportations();
+
+        Collections.sort(transportations);
+        transportations.forEach(System.out::println);
+    }
+
+    public void filterTransportationsByDestination(String destination) {
+
+        ArrayList<Transportation> transportations = getTransportations();
+        transportations.stream().filter(transportation -> transportation.getEndingPoint().equals(destination)).forEach(System.out::println);
+
     }
 }
