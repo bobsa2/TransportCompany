@@ -104,7 +104,7 @@ public class Employee implements Comparable<Employee>{
                 "name='" + name + '\'' +
                 ", income=" + income +
                 ", transportCompany=" + transportCompany +
-                ", qualification=" + qualification +
+                ", qualifications=" + qualifications +
                 '}';
     }
 }
