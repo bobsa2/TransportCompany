@@ -109,11 +109,19 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
         return (ArrayList<TransportCompany>) entityManager.createNativeQuery(idQuery, TransportCompany.class).getResultList();
     }
 
-    public void sortTransportCompanies(){
+    public void sortTransportCompaniesByName(){
 
         ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
 
-        transportCompanies.sort(TransportCompany.transportCompanyComparatorName.thenComparing(TransportCompany.transportCompanyComparatorIncome));
+        transportCompanies.sort(TransportCompany.transportCompanyComparatorName);
+        transportCompanies.forEach(System.out::print);
+    }
+
+    public void sortTransportCompaniesByIncome(){
+
+        ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
+
+        transportCompanies.sort(TransportCompany.transportCompanyComparatorIncome);
         transportCompanies.forEach(System.out::print);
     }
 
