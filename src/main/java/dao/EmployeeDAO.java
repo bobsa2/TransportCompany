@@ -42,14 +42,6 @@ public class EmployeeDAO implements Dao<Employee> {
 
             Employee retrievedEmployee = entityManager.find(Employee.class, id);
 
-            String qualificationsQuery = "SELECT * FROM Qualification WHERE employee_id = " + id;
-            ArrayList<Qualification> qualifications = (ArrayList<Qualification>) entityManager
-                    .createNativeQuery(qualificationsQuery).getResultList();
-            if (qualifications.size() > 0) {
-                qualifications.forEach(qualification -> {
-                    qualification.setEmployee(null);
-                });
-            }
             entityManager.getTransaction().begin();
             entityManager.remove(retrievedEmployee);
             entityManager.getTransaction().commit();

@@ -1,9 +1,12 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,6 +14,12 @@ import java.util.Set;
 
 public class TransportCompany implements Comparable<TransportCompany>{
 
+    public TransportCompany(){
+        this.clients = new HashSet<Client>();
+        this.vehicles = new HashSet<Vehicle>();
+        this.employees = new HashSet<Employee>();
+        this.transportations = new HashSet<Transportation>();
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -35,7 +44,13 @@ public class TransportCompany implements Comparable<TransportCompany>{
 
     @ManyToMany(mappedBy = "transportCompanies")
     private Set<Client> clients;
-
+    @PreRemove
+    public void removeRelationships(){
+        System.out.println("Before removing");
+        this.employees.forEach((employee) -> employee.setTransportCompany(null));
+        this.vehicles.forEach((vehicle) -> vehicle.setTransportCompany(null));
+        this.transportations.forEach((transportation) -> transportation.setTransportCompany(null));
+    }
     public long getId() {
         return id;
     }

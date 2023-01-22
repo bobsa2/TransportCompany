@@ -5,6 +5,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -12,6 +13,9 @@ import java.util.Set;
 
 public class Employee {
 
+    public Employee(){
+        this.qualifications = new HashSet<Qualification>();
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -27,7 +31,12 @@ public class Employee {
     private TransportCompany transportCompany;
 
     @OneToMany(mappedBy = "employee")
-    private Set<Qualification> qualification;
+    private Set<Qualification> qualifications;
+
+    @PreRemove
+    public void removeRelationships(){
+        this.qualifications.forEach((qualification -> qualification.setEmployee(null)));
+    }
 
     public long getId() {
         return id;
@@ -62,10 +71,10 @@ public class Employee {
     }
 
     public Set<Qualification> getQualification() {
-        return qualification;
+        return qualifications;
     }
 
     public void setQualification(Set<Qualification> qualification) {
-        this.qualification = qualification;
+        this.qualifications = qualification;
     }
 }
