@@ -93,6 +93,7 @@ public class EmployeeDAOTest {
         entityManager.getTransaction().begin();
         String selectEmployeeQuery = "SELECT * FROM Employee AS v WHERE v.Name = 'UpdatedName'";
 
+        EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
         EntitySeeder.seedRecords(EmployeeRepository.employees);
 
         testEmployee.setName("UpdatedName");

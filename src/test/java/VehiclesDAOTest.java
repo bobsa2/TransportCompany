@@ -79,7 +79,7 @@ public class VehiclesDAOTest {
         entityManager.getTransaction().begin();
         String selectVehicleQuery = "SELECT * FROM Vehicle AS v WHERE v.model = 'UpdatedModel'";
 
-
+        EntitySeeder.seedRecords(TransportCompanyRepository.transportCompanies);
         EntitySeeder.seedRecords(VehicleRepository.vehicles);
 
         testVehicle.setType("UpdatedType");

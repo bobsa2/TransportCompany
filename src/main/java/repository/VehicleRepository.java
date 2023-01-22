@@ -35,6 +35,10 @@ public class VehicleRepository {
                 vehicle.setModel("X-" + index);
                 vehicle.setType(vehicle_types[index]);
 
+
+                TransportCompany transportCompany = (TransportCompany) TransportCompanyRepository.transportCompanies.toArray()[index];
+                vehicle.setTransportCompany(transportCompany);
+
                 return vehicle;
 
             }).collect(Collectors.toSet());
