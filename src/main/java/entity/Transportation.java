@@ -13,23 +13,26 @@ public class Transportation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "cargo", nullable = false)
+    @Column(name = "cargo")
     private String cargo;
 
-    @Column(name = "starting_point", nullable = false)
+    @Column(name = "price")
+    private double price;
+
+    @Column(name = "starting_point")
     private String startingPoint;
 
-    @Column(name = "ending_point", nullable = false)
+    @Column(name = "ending_point")
     private String endingPoint;
 
-    @Column(name = "date_departure", nullable = false)
+    @Column(name = "date_departure")
     private LocalDate dateDeparture;
 
-    @Column(name = "date_arrival", nullable = false)
+    @Column(name = "date_arrival")
     private LocalDate dateArrival;
 
     @ManyToOne
-    @JoinColumn(name = "transport_company_id", nullable = true)
+    @JoinColumn(name = "transport_company_id")
     private TransportCompany transportCompany;
 
     public String getCargo() {
@@ -78,5 +81,13 @@ public class Transportation {
 
     public void setTransportCompany(TransportCompany transportCompany) {
         this.transportCompany = transportCompany;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
