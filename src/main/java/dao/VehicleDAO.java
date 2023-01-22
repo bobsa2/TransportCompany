@@ -48,7 +48,7 @@ public class VehicleDAO implements Dao<Vehicle> {
 
     @Override
     public boolean isValid(long id) {
-        String idQuery = String.format("SELECT * FROM Vehicle WHERE id = %s", id);
+        String idQuery = String.format("SELECT * FROM vehicle WHERE id = %s", id);
 
         int resultCount = entityManager.createNativeQuery(idQuery, Vehicle.class).getResultList().size();
 

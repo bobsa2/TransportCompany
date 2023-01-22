@@ -52,7 +52,7 @@ public class TransportationDAO implements Dao<Transportation> {
 
     @Override
     public boolean isValid(long id) {
-        String idQuery = String.format("SELECT * FROM Transportation WHERE id = %s", id);
+        String idQuery = String.format("SELECT * FROM transportation WHERE id = %s", id);
 
         int resultCount = entityManager.createNativeQuery(idQuery, Transportation.class).getResultList().size();
 

@@ -11,6 +11,8 @@ import jakarta.persistence.Persistence;
 import util.Dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TransportCompanyDAO implements Dao<TransportCompany> {
 
@@ -98,5 +100,14 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
         int resultCount = entityManager.createNativeQuery(idQuery, TransportCompany.class).getResultList().size();
 
         return resultCount > 0;
+    }
+
+    public void sortTransportCompanies(){
+        String idQuery = "SELECT * FROM transport_company";
+
+        ArrayList<TransportCompany> transportCompanies = (ArrayList<TransportCompany>) entityManager.createNativeQuery(idQuery, TransportCompany.class).getResultList();
+
+        transportCompanies.sort(TransportCompany.transportCompanyComparatorName.thenComparing(TransportCompany.transportCompanyComparatorIncome));
+        transportCompanies.forEach(System.out::print);
     }
 }

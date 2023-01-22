@@ -3,12 +3,13 @@ package entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Set;
 
 @Entity
 @Table(name = "transport_company")
 
-public class TransportCompany {
+public class TransportCompany implements Comparable<TransportCompany>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,5 +98,34 @@ public class TransportCompany {
 
     public void setClients(Set<Client> clients) {
         this.clients = clients;
+    }
+
+    public static Comparator<TransportCompany> transportCompanyComparatorIncome = new Comparator<TransportCompany>() {
+        @Override
+        public int compare(TransportCompany transportCompany1, TransportCompany transportCompany2) {
+            return transportCompany1.totalIncome.compareTo(transportCompany2.totalIncome);
+        }
+    };
+
+    public static Comparator<TransportCompany> transportCompanyComparatorName = new Comparator<TransportCompany>() {
+        @Override
+        public int compare(TransportCompany transportCompany1, TransportCompany transportCompany2) {
+            return transportCompany1.name.compareTo(transportCompany2.name);
+        }
+    };
+
+    @Override
+    public String toString() {
+        return "TransportCompany{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", totalIncome=" + totalIncome +
+                '}';
+    }
+
+    @Override
+    public int compareTo(TransportCompany transportCompany) {
+        return this.name.compareTo(transportCompany.name);
     }
 }

@@ -1,5 +1,6 @@
 package org.main;
 
+import dao.TransportCompanyDAO;
 import repository.*;
 import util.EntitySeeder;
 

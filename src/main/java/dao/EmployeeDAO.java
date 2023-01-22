@@ -58,7 +58,7 @@ public class EmployeeDAO implements Dao<Employee> {
 
     @Override
     public boolean isValid(long id) {
-        String idQuery = String.format("SELECT * FROM Employee WHERE id = %s", id);
+        String idQuery = String.format("SELECT * FROM employee WHERE id = %s", id);
 
         int resultCount = entityManager.createNativeQuery(idQuery, Employee.class).getResultList().size();
 
