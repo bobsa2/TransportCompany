@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import util.Dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -102,12 +103,31 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
         return resultCount > 0;
     }
 
-    public void sortTransportCompanies(){
+    public ArrayList<TransportCompany> getTransportCompanies() {
         String idQuery = "SELECT * FROM transport_company";
 
-        ArrayList<TransportCompany> transportCompanies = (ArrayList<TransportCompany>) entityManager.createNativeQuery(idQuery, TransportCompany.class).getResultList();
+        return (ArrayList<TransportCompany>) entityManager.createNativeQuery(idQuery, TransportCompany.class).getResultList();
+    }
+
+    public void sortTransportCompanies(){
+
+        ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
 
         transportCompanies.sort(TransportCompany.transportCompanyComparatorName.thenComparing(TransportCompany.transportCompanyComparatorIncome));
         transportCompanies.forEach(System.out::print);
+    }
+
+    public void filterTransportCompaniesByName(String sequence) {
+
+        ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
+        transportCompanies.stream().filter(transportCompany -> transportCompany.getName().contains(sequence)).forEach(System.out::println);
+
+    }
+
+    public void filterTransportCompaniesByIncome(BigDecimal value) {
+
+        ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
+        transportCompanies.stream().filter(transportCompany -> transportCompany.getTotalIncome().compareTo(value) > 0).forEach(System.out::println);
+
     }
 }
