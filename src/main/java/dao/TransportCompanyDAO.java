@@ -100,7 +100,7 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
     public void filterTransportCompaniesByIncome(BigDecimal value) {
 
         ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
-        transportCompanies.stream().filter(transportCompany -> transportCompany.getTotalIncome().compareTo(value) > 0).forEach(System.out::println);
+        transportCompanies.stream().filter(transportCompany -> transportCompany.getTotalIncome().compareTo(value) >= 0).forEach(System.out::println);
 
     }
 }

@@ -18,7 +18,7 @@ public class TransportationRepository {
             "Fireproof",
     };
     static final String[] ending_points = {
-            "Sofia",
+            "Canada",
             "Lithuania",
             "Germany"
     };

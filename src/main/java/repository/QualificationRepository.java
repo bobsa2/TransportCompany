@@ -10,9 +10,9 @@ import java.util.stream.LongStream;
 
 public class QualificationRepository {
     static final String[] qualification_names = {
-            "Bus",
-            "Car",
-            "Truck",
+            "Large Packages",
+            "Fragile",
+            "Valuable",
             "Plane"
     };
 

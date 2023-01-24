@@ -91,7 +91,7 @@ public class EmployeeDAO implements Dao<Employee> {
     public void filterEmployeesByIncome(BigDecimal value) {
 
         ArrayList<Employee> employees = getEmployees();
-        employees.stream().filter(employee -> employee.getIncome().compareTo(value) > 0).forEach(System.out::println);
+        employees.stream().filter(employee -> employee.getIncome().compareTo(value) >= 0).forEach(System.out::println);
 
     }
 }
