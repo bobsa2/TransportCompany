@@ -34,6 +34,7 @@ public class TransportationRepository {
                 transportation.setCargo(cargo_types[index]);
                 transportation.setDateDeparture(LocalDate.now());
                 transportation.setDateArrival(LocalDate.now().plusDays(index));
+                transportation.setHasFinished(i % 2 == 0 ? true : false);
                 transportation.setEndingPoint(ending_points[index]);
                 transportation.setStartingPoint("Bulgaria");
 

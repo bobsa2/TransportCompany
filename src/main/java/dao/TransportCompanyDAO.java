@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class TransportCompanyDAO implements Dao<TransportCompany> {
 
@@ -59,6 +61,7 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
             entityManager.getTransaction().commit();
         }
     }
+
     @Override
     public boolean isValid(long id) {
         String idQuery = String.format("SELECT * FROM transport_company WHERE id = %s", id);
@@ -74,7 +77,7 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
         return (ArrayList<TransportCompany>) entityManager.createNativeQuery(idQuery, TransportCompany.class).getResultList();
     }
 
-    public void sortTransportCompaniesByName(){
+    public void sortTransportCompaniesByName() {
 
         ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
 
@@ -82,7 +85,7 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
         transportCompanies.forEach(System.out::print);
     }
 
-    public void sortTransportCompaniesByIncome(){
+    public void sortTransportCompaniesByIncome() {
 
         ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
 
@@ -101,6 +104,20 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
 
         ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
         transportCompanies.stream().filter(transportCompany -> transportCompany.getTotalIncome().compareTo(value) >= 0).forEach(System.out::println);
+
+    }
+
+    public void printTotalFinishedTransportations(int id) {
+        entityManager.getTransaction().begin();
+        if (isValid(id)) {
+            TransportCompany transportCompany = entityManager.find(TransportCompany.class, id);
+            if (transportCompany.getTransportations().size() > 0) {
+                Predicate<Transportation> transportationPredicate = (transportation) -> transportation.getHasFinished() == true;
+                transportCompany.getTransportations().stream()
+                        .filter(transportationPredicate)
+                        .forEach(System.out::println);
+            }
+        }
 
     }
 }
