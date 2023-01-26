@@ -9,6 +9,7 @@ import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 import repository.EmployeeRepository;
 import repository.TransportCompanyRepository;
+import util.Comparators;
 import util.EntitySeeder;
 
 import java.math.BigDecimal;
@@ -93,8 +94,7 @@ public class EmployeeDAOTest {
                 .getResultList();
 
         // Assert
-        int actual = Comparator.comparing(Employee::getName)
-                .thenComparing(Employee::getIncome)
+        int actual = Comparators.employeeComparator
                 .compare(testEmployee, resultList.get(0));
 
         entityManager.getTransaction().commit();
@@ -141,8 +141,7 @@ public class EmployeeDAOTest {
         entityManager.refresh(resultList.get(0));
 
         //Assert
-        int actual = Comparator.comparing(Employee::getName)
-                .thenComparing(Employee::getIncome)
+        int actual = Comparators.employeeComparator
                 .compare(updateEmployee, resultList.get(0));
 
         assertEquals(0, actual);

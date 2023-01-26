@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 import repository.ClientRepository;
+import util.Comparators;
 import util.EntitySeeder;
 
 import java.math.BigDecimal;
@@ -75,11 +76,7 @@ public class ClientDAOTest {
 
 
         //Assert
-        int actual = comparing(Client::getName)
-                .thenComparing(Client::getAge)
-                .thenComparing(Client::getHasPaid)
-                .thenComparing(Client::getMail)
-                .thenComparing(Client::getTelephone)
+        int actual = Comparators.clientComparator
                 .compare(testClient, resultList.get(0));
 
         entityManager.getTransaction().commit();
@@ -109,19 +106,16 @@ public class ClientDAOTest {
         entityManager.refresh(resultList.get(0));
 
         //Assert
-        int actual = Comparator.comparing(Client::getName)
-                .thenComparing(Client::getAge)
-                .thenComparing(Client::getAge)
-                .thenComparing(Client::getHasPaid)
-                .thenComparing(Client::getMail)
+        int actual = Comparators.clientComparator
                 .compare(testClient, resultList.get(0));
 
         entityManager.getTransaction().commit();
         assertEquals(0, actual);
     }
+
     @Test
     @Order(1)
-    public void deleteShouldExecuteSuccessfully(){
+    public void deleteShouldExecuteSuccessfully() {
         //Arrange
         entityManager.getTransaction().begin();
 
