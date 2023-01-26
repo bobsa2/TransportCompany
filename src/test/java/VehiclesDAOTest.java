@@ -8,6 +8,7 @@ import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 import repository.TransportCompanyRepository;
 import repository.VehicleRepository;
+import util.Comparators;
 import util.EntitySeeder;
 
 import java.math.BigDecimal;
@@ -78,9 +79,7 @@ public class VehiclesDAOTest {
                 .getResultList();
 
         // Assert
-        int actual = Comparator.comparing(Vehicle::getModel)
-                .thenComparing(Vehicle::getBrand)
-                .thenComparing(Vehicle::getType)
+        int actual = Comparators.vehicleComparator
                 .compare(testVehicle, resultList.get(0));
 
         entityManager.getTransaction().commit();
@@ -126,10 +125,8 @@ public class VehiclesDAOTest {
 
         entityManager.refresh(resultList.get(0));
 
-        int actual = Comparator.comparing(Vehicle::getModel)
-                .thenComparing(Vehicle::getBrand)
-                .thenComparing(Vehicle::getType)
-                .compare(testUpdateVehicle, resultList.get(0));
+        int actual = Comparators.vehicleComparator
+                .compare(testUpdateVehicle,resultList.get(0));
 
         assertEquals(0, actual);
 

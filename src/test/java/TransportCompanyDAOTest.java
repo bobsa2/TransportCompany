@@ -7,6 +7,7 @@ import jakarta.persistence.Persistence;
 import org.junit.jupiter.api.*;
 import repository.TransportCompanyRepository;
 import repository.TransportationRepository;
+import util.Comparators;
 import util.EntitySeeder;
 
 import java.math.BigDecimal;
@@ -35,7 +36,7 @@ public class TransportCompanyDAOTest {
 
     @BeforeEach()
     public void beforeEach() {
-        if (entityManager.getTransaction().isActive()){
+        if (entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().commit();
         }
         entityManager.getTransaction().begin();
@@ -76,9 +77,7 @@ public class TransportCompanyDAOTest {
                 .getResultList();
 
         // Assert
-        int actual = Comparator.comparing(TransportCompany::getName)
-                .thenComparing(TransportCompany::getTotalIncome)
-                .thenComparing(TransportCompany::getAddress)
+        int actual = Comparators.transportCompanyComparator
                 .compare(testTransportCompany, resultList.get(0));
 
         entityManager.getTransaction().commit();
@@ -109,9 +108,7 @@ public class TransportCompanyDAOTest {
 
         entityManager.refresh(resultList.get(0));
         //Assert
-        int actual = Comparator.comparing(TransportCompany::getName)
-                .thenComparing(TransportCompany::getTotalIncome)
-                .thenComparing(TransportCompany::getAddress)
+        int actual = Comparators.transportCompanyComparator
                 .compare(testTransportCompany, resultList.get(0));
 
         entityManager.getTransaction().commit();
