@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "transportation")
 
-public class Transportation implements Comparable<Transportation>{
+public class Transportation implements Comparable<Transportation> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +15,9 @@ public class Transportation implements Comparable<Transportation>{
 
     @Column(name = "cargo")
     private String cargo;
+
+    @Column(name = "hasFinished")
+    private boolean hasFinished;
 
     @Column(name = "price")
     private double price;
@@ -89,6 +92,13 @@ public class Transportation implements Comparable<Transportation>{
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public boolean getHasFinished(){
+        return this.hasFinished;
+    }
+    public void setHasFinished(boolean hasFinished) {
+        this.hasFinished = hasFinished;
     }
 
     @Override
