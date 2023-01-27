@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class TransportCompanyDAO implements Dao<TransportCompany> {
 
@@ -101,7 +102,6 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
     }
 
     public void filterTransportCompaniesByIncome(BigDecimal value) {
-
         ArrayList<TransportCompany> transportCompanies = getTransportCompanies();
         transportCompanies.stream().filter(transportCompany -> transportCompany.getTotalIncome().compareTo(value) >= 0).forEach(System.out::println);
 
@@ -118,6 +118,21 @@ public class TransportCompanyDAO implements Dao<TransportCompany> {
                         .forEach(System.out::println);
             }
         }
+        entityManager.getTransaction().commit();
+    }
 
+    public void printIncomeFromEmployees(int id) {
+        entityManager.getTransaction().begin();
+        if (isValid(id)) {
+            TransportCompany transportCompany = entityManager.find(TransportCompany.class, id);
+            if (transportCompany.getEmployees().size() > 0) {
+                BigDecimal sum = transportCompany.getEmployees().stream()
+                        .map((employee -> {
+                            return employee.getIncome();
+                        }))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                System.out.println(String.format("Total income of employees is %s$", sum));
+            }
+        }
     }
 }
