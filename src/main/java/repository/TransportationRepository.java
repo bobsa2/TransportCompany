@@ -3,6 +3,7 @@ package repository;
 import entity.Employee;
 import entity.TransportCompany;
 import entity.Transportation;
+import entity.TransportationType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,10 +32,10 @@ public class TransportationRepository {
 
                 Transportation transportation = new Transportation();
 
-                transportation.setCargo(cargo_types[index]);
                 transportation.setDateDeparture(LocalDate.now());
                 transportation.setDateArrival(LocalDate.now().plusDays(index));
                 transportation.setHasFinished(i % 2 == 0 ? true : false);
+                transportation.setType(i % 2 == 0 ? TransportationType.Cargo : TransportationType.People);
                 transportation.setEndingPoint(ending_points[index]);
                 transportation.setStartingPoint("Bulgaria");
 
