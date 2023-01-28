@@ -11,9 +11,11 @@ import util.Comparators;
 import util.EntitySeeder;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Vector;
+import java.util.stream.LongStream;
 
 import static java.util.Comparator.comparing;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,16 +45,22 @@ public class ClientDAOTest {
         entityManager.getTransaction().commit();
 
         entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("TRUNCATE TABLE Client").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE transportation").executeUpdate();
         entityManager.getTransaction().commit();
 
-
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("TRUNCATE TABLE Client").executeUpdate();
+        entityManager.getTransaction().commit();
     }
 
-    @BeforeAll
-    public static void afterEach() {
+    @AfterEach
+    public void afterEach() {
         entityManager.getTransaction().begin();
         entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0;").executeUpdate();
+        entityManager.getTransaction().commit();
+
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("TRUNCATE TABLE transportation").executeUpdate();
         entityManager.getTransaction().commit();
 
         entityManager.getTransaction().begin();
@@ -87,29 +95,48 @@ public class ClientDAOTest {
     @Order(3)
     public void updateShouldExecuteSuccessfully() {
         //Arrange
+        entityManager.clear();
         entityManager.getTransaction().begin();
         String selectClientQuery = "SELECT * FROM Client AS v WHERE v.Name = 'UpdatedName'";
-        EntitySeeder.seedRecords(ClientRepository.clients);
+        String selectTransportationQuery = "SELECT * FROM Transportation";
 
-        testClient.setName("UpdatedName");
-        testClient.setTelephone("UpdatedNumber");
-        testClient.setMail("UpdateMail");
-        testClient.setAge(19);
+        seedTestTransportations();
+        entityManager.getTransaction().commit();
+
+        entityManager.getTransaction().begin();
+        Client updateClient = new Client();
+
+        ArrayList<Transportation> transportations = (ArrayList<Transportation>) entityManager
+                .createNativeQuery(selectTransportationQuery, Transportation.class)
+                .getResultList();
+
+        updateClient.setTransportation(transportations.get(0));
+        updateClient.setName("TestName");
+        updateClient.setTelephone("TestNumber");
+        updateClient.setMail("TestMail");
+        updateClient.setAge(19);
+
+        entityManager.merge(updateClient);
+        entityManager.getTransaction().commit();
 
         //Act
-        clientDAO.update(1, testClient);
+        updateClient.setName("UpdatedName");
+        updateClient.setTelephone("UpdatedNumber");
+        updateClient.setMail("UpdatedMail");
+        updateClient.setAge(22);
+
+        clientDAO.update(1, updateClient);
 
         ArrayList<Client> resultList = (ArrayList<Client>) entityManager
-                .createNativeQuery("SELECT * FROM Client", Client.class)
+                .createNativeQuery(selectClientQuery, Client.class)
                 .getResultList();
 
         entityManager.refresh(resultList.get(0));
 
         //Assert
         int actual = Comparators.clientComparator
-                .compare(testClient, resultList.get(0));
+                .compare(updateClient, resultList.get(0));
 
-        entityManager.getTransaction().commit();
         assertEquals(0, actual);
     }
 
@@ -139,5 +166,21 @@ public class ClientDAOTest {
 
         entityManager.getTransaction().commit();
         assertEquals(0, actualCount);
+    }
+
+    private void seedTestTransportations() {
+        LongStream.range(1, 7)
+                .mapToObj((i) -> {
+                    Transportation transportation = new Transportation();
+                    transportation.setType(TransportationType.People);
+                    transportation.setHasFinished(false);
+                    transportation.setStartingPoint("TestStartingPoint" + i);
+                    transportation.setEndingPoint("TestEndingPoint" + i);
+                    transportation.setDateArrival(LocalDate.now().plusDays(i));
+                    transportation.setDateDeparture(LocalDate.now());
+                    return transportation;
+                }).forEach(transportCompany -> {
+                    entityManager.persist(transportCompany);
+                });
     }
 }
