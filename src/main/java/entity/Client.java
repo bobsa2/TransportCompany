@@ -28,6 +28,9 @@ public class Client {
     @Column(name = "has_paid", nullable = false)
     private boolean hasPaid;
 
+    @ManyToOne
+    @JoinColumn(name = "transportation_id")
+    private Transportation transportation;
     @ManyToMany
     Set<TransportCompany> transportCompanies;
     public String getName() {
@@ -78,4 +81,11 @@ public class Client {
         this.transportCompanies = transportCompanies;
     }
 
+    public Transportation getTransportation() {
+        return transportation;
+    }
+
+    public void setTransportation(Transportation transportation) {
+        this.transportation = transportation;
+    }
 }

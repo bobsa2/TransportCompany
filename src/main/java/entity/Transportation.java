@@ -3,24 +3,36 @@ package entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "transportation")
 
 public class Transportation implements Comparable<Transportation> {
 
+    public Transportation(){
+        this.clients = new HashSet<Client>();
+        this.cargos = new HashSet<Cargo>();
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name = "cargo")
-    private String cargo;
 
     @Column(name = "hasFinished")
     private boolean hasFinished;
 
     @Column(name = "price")
     private double price;
+
+    @Column(name = "type")
+    private TransportationType type;
+
+    @OneToMany(mappedBy = "transportation")
+    private Set<Cargo> cargos;
+
+    @OneToMany(mappedBy = "transportation")
+    private Set<Client> clients;
 
     @Column(name = "starting_point")
     private String startingPoint;
@@ -38,12 +50,10 @@ public class Transportation implements Comparable<Transportation> {
     @JoinColumn(name = "transport_company_id")
     private TransportCompany transportCompany;
 
-    public String getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
+    @PreRemove
+    public void removeRelationships(){
+        this.clients.forEach(client -> client.setTransportation(null));
+        this.cargos.forEach(cargo -> cargo.setTransportation(null));
     }
 
     public String getStartingPoint() {
@@ -94,11 +104,36 @@ public class Transportation implements Comparable<Transportation> {
         this.price = price;
     }
 
-    public boolean getHasFinished(){
+    public boolean getHasFinished() {
         return this.hasFinished;
     }
+
     public void setHasFinished(boolean hasFinished) {
         this.hasFinished = hasFinished;
+    }
+
+    public TransportationType getType() {
+        return type;
+    }
+
+    public void setType(TransportationType type) {
+        this.type = type;
+    }
+
+    public Set<Cargo> getCargos() {
+        return cargos;
+    }
+
+    public void setCargos(Set<Cargo> cargos) {
+        this.cargos = cargos;
+    }
+
+    public Set<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(Set<Client> clients) {
+        this.clients = clients;
     }
 
     @Override
@@ -109,7 +144,6 @@ public class Transportation implements Comparable<Transportation> {
     @Override
     public String toString() {
         return "Transportation{" +
-                "cargo='" + cargo + '\'' +
                 ", price=" + price +
                 ", startingPoint='" + startingPoint + '\'' +
                 ", endingPoint='" + endingPoint + '\'' +
