@@ -2,6 +2,8 @@ package entity;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "qualification")
 
@@ -13,9 +15,8 @@ public class Qualification {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = true)
-    private Employee employee;
+    @ManyToMany(mappedBy = "qualifications")
+    private Set<Employee> employees;
 
     public String getName() {
         return name;
@@ -25,11 +26,11 @@ public class Qualification {
         this.name = name;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public Set<Employee> getEmployees() {
+        return employees;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
     }
 }

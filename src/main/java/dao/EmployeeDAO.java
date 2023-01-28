@@ -84,7 +84,7 @@ public class EmployeeDAO implements Dao<Employee> {
     public void filterEmployeesByQualification(Qualification qualification) {
 
         ArrayList<Employee> employees = getEmployees();
-        employees.stream().filter(employee -> employee.getQualification().contains(qualification)).forEach(System.out::println);
+        employees.stream().filter(employee -> employee.getQualifications().contains(qualification)).forEach(System.out::println);
 
     }
 

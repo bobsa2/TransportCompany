@@ -12,11 +12,12 @@ import java.util.Set;
 @Entity
 @Table(name = "employee")
 
-public class Employee implements Comparable<Employee>{
+public class Employee implements Comparable<Employee> {
 
-    public Employee(){
+    public Employee() {
         this.qualifications = new HashSet<Qualification>();
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -31,13 +32,8 @@ public class Employee implements Comparable<Employee>{
     @JoinColumn(name = "transport_company_id", nullable = true)
     private TransportCompany transportCompany;
 
-    @OneToMany(mappedBy = "employee")
+    @ManyToMany
     private Set<Qualification> qualifications;
-
-    @PreRemove
-    public void removeRelationships(){
-        this.qualifications.forEach((qualification -> qualification.setEmployee(null)));
-    }
 
     public long getId() {
         return id;
@@ -71,7 +67,7 @@ public class Employee implements Comparable<Employee>{
         this.transportCompany = transportCompany;
     }
 
-    public Set<Qualification> getQualification() {
+    public Set<Qualification> getQualifications() {
         return qualifications;
     }
 
@@ -87,7 +83,7 @@ public class Employee implements Comparable<Employee>{
     public static Comparator<Employee> employeeComparatorQualification = new Comparator<Employee>() {
         @Override
         public int compare(Employee employee1, Employee employee2) {
-            return Integer.compare(employee1.getQualification().size(), employee2.getQualification().size());
+            return Integer.compare(employee1.getQualifications().size(), employee2.getQualifications().size());
         }
     };
 
