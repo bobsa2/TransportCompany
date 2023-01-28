@@ -26,7 +26,6 @@ public class QualificationRepository {
                 Employee employee = (Employee) EmployeeRepository.employees.toArray()[index];
 
                 qualification.setName(qualification_names[index]);
-                qualification.setEmployee(employee);
 
                 return qualification;
 
