@@ -35,7 +35,6 @@ public class TransportationDAO implements Dao<Transportation> {
             Transportation retrievedTransportation = entityManager.find(Transportation.class, id);
 
             retrievedTransportation.setTransportCompany(transportation.getTransportCompany());
-            retrievedTransportation.setCargo(transportation.getCargo());
             retrievedTransportation.setPrice(transportation.getPrice());
             retrievedTransportation.setDateArrival(transportation.getDateArrival());
             retrievedTransportation.setDateDeparture(transportation.getDateDeparture());
@@ -89,7 +88,7 @@ public class TransportationDAO implements Dao<Transportation> {
     }
 
     public File createFile() {
-        File file = new File("C:\\Users\\user\\TransportCompany\\TransportationFile.txt");
+        File file = new File("C:\\TransportCompany\\TransportationFile.txt");
         try {
             if (file.createNewFile()) {
                 System.out.println("File created: " + file.getName());
