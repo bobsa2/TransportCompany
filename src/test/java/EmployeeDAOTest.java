@@ -54,6 +54,9 @@ public class EmployeeDAOTest {
         entityManager.createNativeQuery("TRUNCATE TABLE qualification").executeUpdate();
         entityManager.getTransaction().commit();
 
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("TRUNCATE TABLE employee_qualification").executeUpdate();
+        entityManager.getTransaction().commit();
     }
 
     @AfterEach
@@ -74,6 +77,9 @@ public class EmployeeDAOTest {
         entityManager.createNativeQuery("TRUNCATE TABLE qualification").executeUpdate();
         entityManager.getTransaction().commit();
 
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("TRUNCATE TABLE employee_qualification").executeUpdate();
+        entityManager.getTransaction().commit();
     }
 
     @Test
