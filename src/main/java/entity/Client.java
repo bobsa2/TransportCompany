@@ -88,4 +88,6 @@ public class Client {
     public void setTransportation(Transportation transportation) {
         this.transportation = transportation;
     }
+
+
 }

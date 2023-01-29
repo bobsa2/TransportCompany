@@ -4,6 +4,7 @@ import dao.*;
 import entity.*;
 import repository.*;
 import util.EntitySeeder;
+import util.RelationshipsMapper;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -23,9 +24,14 @@ public class Main {
         EntitySeeder.seedRecords(QualificationRepository.qualifications);
         EntitySeeder.seedRecords(TransportationRepository.transportations);
         EntitySeeder.seedRecords(ClientRepository.clients);
+        EntitySeeder.seedRecords(CargoRepository.cargos);
         EntitySeeder.seedRecords(VehicleRepository.vehicles);
 
+        RelationshipsMapper.mapEmployeeQualifications();
+        RelationshipsMapper.mapClientTransportCompanies();
 
+        employeeDAO.delete(3);
+        transportCompanyDAO.printIncomeFromEmployees(2);
         TransportCompany transportCompany = new TransportCompany();
         transportCompany.setName("Bulgarian Transport");
         transportCompany.setAddress("Geo Milev street");
@@ -49,7 +55,6 @@ public class Main {
 
         Transportation transportation = new Transportation();
         transportation.setTransportCompany(transportCompany);
-        transportation.setCargo("Cars");
         transportation.setStartingPoint("Plovdiv");
         transportation.setEndingPoint("Sofia");
         transportation.setPrice(200000);
