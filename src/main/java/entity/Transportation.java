@@ -1,7 +1,11 @@
 package entity;
 
 import jakarta.persistence.*;
+import util.Messages;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,32 +23,40 @@ public class Transportation implements Comparable<Transportation> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull(message = "Has finished" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "hasFinished")
     private boolean hasFinished;
 
+    @NotNull(message = "Income" + Messages.NOT_NULL_MESSAGE)
+    @Min(0)
     @Column(name = "income")
     private double income;
 
     @Column(name = "type")
     private TransportationType type;
 
+    @NotNull(message = "Starting point" + Messages.NOT_NULL_MESSAGE)
+    @Size(min = 3, max = 255, message = "Starting Point" + Messages.VALID_SIZE_MESSAGE)
+    @Column(name = "starting_point")
+    private String startingPoint;
+
+    @NotNull(message = "Ending Point" + Messages.NOT_NULL_MESSAGE)
+    @Size(min = 3, max = 255, message = "Ending Point" + Messages.VALID_SIZE_MESSAGE)
+    @Column(name = "ending_point")
+    private String endingPoint;
+
+    @NotNull(message = "Date Departure" + Messages.NOT_NULL_MESSAGE)
+    @Column(name = "date_departure")
+    private LocalDate dateDeparture;
+
+    @NotNull(message = "Date Arrival" + Messages.NOT_NULL_MESSAGE)
+    @Column(name = "date_arrival")
+    private LocalDate dateArrival;
     @OneToMany(mappedBy = "transportation")
     private Set<Cargo> cargos;
 
     @OneToMany(mappedBy = "transportation")
     private Set<Client> clients;
-
-    @Column(name = "starting_point")
-    private String startingPoint;
-
-    @Column(name = "ending_point")
-    private String endingPoint;
-
-    @Column(name = "date_departure")
-    private LocalDate dateDeparture;
-
-    @Column(name = "date_arrival")
-    private LocalDate dateArrival;
 
     @ManyToOne
     @JoinColumn(name = "transport_company_id")
