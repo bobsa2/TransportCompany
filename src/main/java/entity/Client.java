@@ -2,6 +2,11 @@ package entity;
 
 import jakarta.persistence.*;
 
+import util.Messages;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -13,18 +18,27 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+
+    @NotNull(message = "Name" + Messages.NOT_NULL_MESSAGE)
+    @Size(min = 3, max = 245, message = "Name" + Messages.VALID_SIZE_MESSAGE)
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotNull(message = "Age" + Messages.NOT_NULL_MESSAGE)
+    @Min(value = 18, message = "Client should be an adult!")
     @Column(name = "age", nullable = false)
     private int age;
 
+    @NotNull(message = "Mail" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "e-mail")
     private String mail;
 
+    @NotNull(message = "Telephone" + Messages.NOT_NULL_MESSAGE)
+    @Size(min = 5, max = 20, message = "Telephone"+ Messages.VALID_SIZE_MESSAGE)
     @Column(name = "telephone", nullable = false)
     private String telephone;
 
+    @NotNull(message = "Has paid" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "has_paid", nullable = false)
     private boolean hasPaid;
 
@@ -33,6 +47,7 @@ public class Client {
     private Transportation transportation;
     @ManyToMany
     Set<TransportCompany> transportCompanies;
+
     public String getName() {
         return name;
     }
