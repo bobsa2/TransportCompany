@@ -1,9 +1,9 @@
 package entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import util.Messages;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -24,12 +24,15 @@ public class TransportCompany implements Comparable<TransportCompany>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull(message = "Name" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotNull(message = "Address" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "address", nullable = false)
     private String address;
 
+    @NotNull(message = "Total Income" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "total_income")
     private BigDecimal totalIncome;
 
