@@ -1,9 +1,11 @@
 package entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import util.Messages;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Comparator;
@@ -22,9 +24,13 @@ public class Employee implements Comparable<Employee> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull(message = "Name" + Messages.NOT_NULL_MESSAGE)
+    @Size(min = 3, max = 255)
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotNull(message = "Income" + Messages.NOT_NULL_MESSAGE)
+    @Min(value = 0, message = "Income should not be negative!")
     @Column(name = "income", nullable = false)
     private BigDecimal income;
 
