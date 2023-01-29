@@ -35,7 +35,7 @@ public class TransportationDAO implements Dao<Transportation> {
             Transportation retrievedTransportation = entityManager.find(Transportation.class, id);
 
             retrievedTransportation.setTransportCompany(transportation.getTransportCompany());
-            retrievedTransportation.setPrice(transportation.getPrice());
+            retrievedTransportation.setIncome(transportation.getIncome());
             retrievedTransportation.setDateArrival(transportation.getDateArrival());
             retrievedTransportation.setDateDeparture(transportation.getDateDeparture());
             retrievedTransportation.setStartingPoint(transportation.getStartingPoint());

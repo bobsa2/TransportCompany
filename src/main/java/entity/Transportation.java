@@ -22,8 +22,8 @@ public class Transportation implements Comparable<Transportation> {
     @Column(name = "hasFinished")
     private boolean hasFinished;
 
-    @Column(name = "price")
-    private double price;
+    @Column(name = "income")
+    private double income;
 
     @Column(name = "type")
     private TransportationType type;
@@ -49,6 +49,9 @@ public class Transportation implements Comparable<Transportation> {
     @ManyToOne
     @JoinColumn(name = "transport_company_id")
     private TransportCompany transportCompany;
+
+    @ManyToMany(mappedBy = "transportations")
+    private Set<Employee> employees;
 
     @PreRemove
     public void removeRelationships(){
@@ -96,12 +99,12 @@ public class Transportation implements Comparable<Transportation> {
         this.transportCompany = transportCompany;
     }
 
-    public double getPrice() {
-        return price;
+    public double getIncome() {
+        return income;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setIncome(double price) {
+        this.income = price;
     }
 
     public boolean getHasFinished() {
@@ -136,6 +139,14 @@ public class Transportation implements Comparable<Transportation> {
         this.clients = clients;
     }
 
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
+    }
+
     @Override
     public int compareTo(Transportation transportation) {
         return this.endingPoint.compareTo(transportation.endingPoint);
@@ -144,7 +155,7 @@ public class Transportation implements Comparable<Transportation> {
     @Override
     public String toString() {
         return "Transportation{" +
-                ", price=" + price +
+                ", income=" + income +
                 ", startingPoint='" + startingPoint + '\'' +
                 ", endingPoint='" + endingPoint + '\'' +
                 ", dateDeparture=" + dateDeparture +
