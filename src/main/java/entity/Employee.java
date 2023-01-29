@@ -33,6 +33,9 @@ public class Employee implements Comparable<Employee> {
     private TransportCompany transportCompany;
 
     @ManyToMany
+    private Set<Transportation> transportations;
+
+    @ManyToMany
     private Set<Qualification> qualifications;
 
     public long getId() {
@@ -73,6 +76,18 @@ public class Employee implements Comparable<Employee> {
 
     public void setQualification(Set<Qualification> qualification) {
         this.qualifications = qualification;
+    }
+
+    public Set<Transportation> getTransportations() {
+        return transportations;
+    }
+
+    public void setTransportations(Set<Transportation> transportations) {
+        this.transportations = transportations;
+    }
+
+    public void setQualifications(Set<Qualification> qualifications) {
+        this.qualifications = qualifications;
     }
 
     @Override

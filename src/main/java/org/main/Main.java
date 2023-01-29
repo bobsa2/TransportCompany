@@ -6,10 +6,8 @@ import repository.*;
 import util.EntitySeeder;
 import util.RelationshipsMapper;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
 
 public class Main {
     public static TransportCompanyDAO transportCompanyDAO = new TransportCompanyDAO();
@@ -29,9 +27,8 @@ public class Main {
 
         RelationshipsMapper.mapEmployeeQualifications();
         RelationshipsMapper.mapClientTransportCompanies();
+        RelationshipsMapper.mapEmployeeTransportations();
 
-        employeeDAO.delete(3);
-        transportCompanyDAO.printIncomeFromEmployees(2);
         TransportCompany transportCompany = new TransportCompany();
         transportCompany.setName("Bulgarian Transport");
         transportCompany.setAddress("Geo Milev street");
@@ -57,7 +54,7 @@ public class Main {
         transportation.setTransportCompany(transportCompany);
         transportation.setStartingPoint("Plovdiv");
         transportation.setEndingPoint("Sofia");
-        transportation.setPrice(200000);
+        transportation.setIncome(200000);
         transportation.setDateDeparture(LocalDate.of(2023,1,24));
         transportation.setDateArrival(LocalDate.of(2023, 2, 15));
 

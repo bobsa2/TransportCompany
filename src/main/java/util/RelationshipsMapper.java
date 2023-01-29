@@ -57,4 +57,25 @@ public class RelationshipsMapper {
         entityManager.getTransaction().commit();
     }
 
+    public static void mapEmployeeTransportations(){
+        entityManager.getTransaction().begin();
+        ArrayList<Employee> employees = (ArrayList<Employee>) entityManager
+                .createNativeQuery("SELECT * FROM Employee", Employee.class)
+                .getResultList();
+
+        ArrayList<Transportation> transportations = (ArrayList<Transportation>) entityManager
+                .createNativeQuery("SELECT * FROM Transportation", Transportation.class)
+                .getResultList();
+
+        if (employees.size() > 0 && transportations.size() > 0){
+            employees.forEach(employee -> {
+                employee.getTransportations().add(transportations.get(0));
+            });
+            transportations.forEach(transportation -> {
+                transportation.getEmployees().add(employees.get(0));
+            });
+        }
+        entityManager.getTransaction().commit();
+    }
+
 }
