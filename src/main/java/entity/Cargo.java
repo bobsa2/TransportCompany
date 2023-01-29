@@ -1,6 +1,11 @@
 package entity;
 
 import jakarta.persistence.*;
+import util.Messages;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "cargo")
@@ -9,7 +14,12 @@ public class Cargo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull(message = "Name" + Messages.NOT_NULL_MESSAGE)
+    @Size(min = 5, max = 268, message = "Name" + Messages.VALID_SIZE_MESSAGE)
     private String name;
+
+    @NotNull(message = "Weight" + Messages.NOT_NULL_MESSAGE)
+    @Min(1)
     private double weight;
 
     @ManyToOne()
