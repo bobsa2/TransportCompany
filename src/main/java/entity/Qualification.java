@@ -1,7 +1,9 @@
 package entity;
 
 import jakarta.persistence.*;
+import util.Messages;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -12,6 +14,7 @@ public class Qualification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull(message = "Name" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "name", nullable = false)
     private String name;
 
