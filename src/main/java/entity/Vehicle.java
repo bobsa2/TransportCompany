@@ -3,6 +3,9 @@ package entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import util.Messages;
+
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "vehicle")
@@ -12,12 +15,16 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull(message = "Type" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "type")
     private String type;
 
+    @NotNull(message = "Type" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "brand")
     private String brand;
 
+
+    @NotNull(message = "Type" + Messages.NOT_NULL_MESSAGE)
     @Column(name = "model")
     private String model;
 
